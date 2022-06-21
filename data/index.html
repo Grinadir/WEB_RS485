@@ -1,0 +1,36 @@
+<meta charset="utf-8">
+<h2>RS-485</h2>
+<p style="font-size: 1.5em;">Программа для запроса и ответа по RS485</p>
+
+var json = JSON.stringify(data); // {"name":"Jack","items":{"dog":1,"car":1,"phone":2}}
+
+// json в объект
+var obj = JSON.parse(json); // объект
+
+<script>
+	fetch('info.json')
+		.then(function (response) {
+			return response.json();
+		})
+		.then(function (data) {
+			var json = JSON.stringify(data); // {"name":"Jack","items":{"dog":1,"car":1,"phone":2}}
+
+			// json в объект
+			var obj = JSON.parse(json); // объект
+
+		})
+		.catch(function (err) {
+			console.log('error: ' + err);
+		});
+
+</script>
+<form>
+
+	<h2>Имя устройства</h2>
+	<input id="ssdp" value=obj.name class="form-control" pattern="[0-9a-zA-Zа-яА-Я. ]{1,20}"
+		placeholder="Имя устройства">
+
+	<p><input name="userName" size="18" type="text" placeholder="Введите запрос" /></p>
+	<p><input maxlength="11" name="userPhone" size="18" type="text" placeholder="Ответ" /></p>
+	<p><button type="submit">Отправить</button></p>
+</form>
