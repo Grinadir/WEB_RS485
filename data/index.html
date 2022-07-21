@@ -1,36 +1,76 @@
-<meta charset="utf-8">
-<h2>RS-485</h2>
-<p style="font-size: 1.5em;">Программа для запроса и ответа по RS485</p>
+<!DOCTYPE HTML>
+<html>
 
-var json = JSON.stringify(data); // {"name":"Jack","items":{"dog":1,"car":1,"phone":2}}
+<head>
+	<meta charset="utf-8">
+	<h2>RS-485</h2>
+	<p style="font-size: 1.5em;">Программа для запроса и ответа по RS485</p>
+	<script type="text/javascript">
+		var str_json;
+		fetch('/info.json')
+			.then(
+				function (response) {
+					if (response.status !== 200) {
+						console.log('Looks like there was a problem. Status Code: ' +
+							response.status);
+						return;
+					}
 
-// json в объект
-var obj = JSON.parse(json); // объект
+					// Examine the text in the response  
+					response.json().then(function (json) {
 
-<script>
-	fetch('info.json')
-		.then(function (response) {
-			return response.json();
-		})
-		.then(function (data) {
-			var json = JSON.stringify(data); // {"name":"Jack","items":{"dog":1,"car":1,"phone":2}}
+						console.log(json);
+						str_json = JSON.stringify(json);
+						console.log(str_json);
 
-			// json в объект
-			var obj = JSON.parse(json); // объект
+						var parsed_obj = JSON.parse(str_json);
+						console.log(parsed_obj);
 
-		})
-		.catch(function (err) {
-			console.log('error: ' + err);
-		});
+						document.getElementById("request").value = parsed_obj.request_RS485;
+						var json_to_html_tag = document.getElementById("request").value;
+						json_to_html_tag.innerHTML = parsed_obj.request_RS485;
 
-</script>
-<form>
+						document.getElementById("answer").value = parsed_obj.answer_RS485;
+						var json_to_html_tag = document.getElementById("answer").value;
+						json_to_html_tag.innerHTML = parsed_obj.answer_RS485;
 
-	<h2>Имя устройства</h2>
-	<input id="ssdp" value=obj.name class="form-control" pattern="[0-9a-zA-Zа-яА-Я. ]{1,20}"
-		placeholder="Имя устройства">
 
-	<p><input name="userName" size="18" type="text" placeholder="Введите запрос" /></p>
-	<p><input maxlength="11" name="userPhone" size="18" type="text" placeholder="Ответ" /></p>
-	<p><button type="submit">Отправить</button></p>
-</form>
+					});
+				}
+			)
+			.catch(function (err) {
+				console.log('Fetch Error :-S', err);
+			});
+
+
+
+
+
+	</script>
+
+
+
+
+</head>
+
+<body>
+
+	<form>
+
+		<h2>Имя устройства</h2>
+		<p></p><input id="request" value="" class="form-control" pattern="[0-9a-zA-Zа-яА-Я. ]{1,20}"
+			placeholder="Запрос RS485"></p>
+		<p></p><input id="answer" value="" class="form-control" pattern="[0-9a-zA-Zа-яА-Я. ]{1,20}"
+		placeholder="Ответ RS485"></p>
+
+
+		<p><button type="submit">Отправить</button></p>
+
+
+
+
+	</form>
+</body>
+
+
+</html>
