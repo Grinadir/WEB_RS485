@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <WiFiTools.h>
 #include <WebServer.h>
+#include <RS485.h>
 
 void setup() {
   // put your setup code here, to run once:
@@ -12,5 +13,15 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  handleClient();
+  //handleClient();
+  //delay(5000);
+  #if 1
+  intitRS485();
+  transmitRS485();
+  listeningАnswer();
+
+
+
+
+  #endif
 }
