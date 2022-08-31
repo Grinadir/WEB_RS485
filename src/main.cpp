@@ -8,14 +8,15 @@ void setup() {
   Serial.begin(74880);
   WIFIinit();
   initWebServer();
+  intitRS485();
 
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  //handleClient();
+  handleClient();
   //delay(5000);
-  #if 1
+  #if 0
   intitRS485();
   transmitRS485();
   listeningАnswer();

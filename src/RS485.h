@@ -3,7 +3,7 @@
 
 
 void intitRS485();
-void transmitRS485();
+void transmitRS485(byte adress);
 void listeningАnswer();
 
 

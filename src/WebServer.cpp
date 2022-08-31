@@ -1,7 +1,10 @@
 #include <WebServer.h>
 #include <FileSystem.h>
+#include <Utils.h>
+#include <RS485.h>
 
 ESP8266WebServer webserver(80);
+byte adress;
 
 void handleRoot()
 {
@@ -31,20 +34,25 @@ void handleJSON()
     file.close();
 }
 
-void handleSaveJSON(){
+void handleSaveJSON()
+{
 
-    String request=webserver.arg("request");
-    String answer=webserver.arg("answer");
-    writejson(request,answer);
+    String str = webserver.arg("adress");
+    adress = stringToByte(str);
+    Serial.print("\nadress=");
+    Serial.print(adress);
+
+    transmitRS485(adress);
+    listeningАnswer();
+
+    String answer = webserver.arg("answer");
+    writeJson(adress, answer);
     webserver.send(200, "text/plain", "OK");
-
-    
 }
 
 void initWebServer()
 {
 
-    
     webserver.on("/", handleRoot);
     webserver.on("/style.css", handleCSS);
     webserver.on("/info.json", handleJSON);

@@ -7,8 +7,8 @@
 #define SERIAL_COMMUNICATION_CONTROL_PIN 5 // Transmission set pin
 #define RS485_TX_PIN_VALUE HIGH
 #define RS485_RX_PIN_VALUE LOW
-#define RX_PIN 14  //D5
-#define TX_PIN 12  //D6
+#define RX_PIN 14 // D5 RO
+#define TX_PIN 12 // D6 DI
 
 SoftwareSerial UartToRS485(RX_PIN, TX_PIN);
 
@@ -75,26 +75,64 @@ void transmitRS485()
   UartToRS485.write(0x82);
 }
 
+void transmitRS485(byte adress)
+{
+  digitalWrite(SERIAL_COMMUNICATION_CONTROL_PIN, RS485_TX_PIN_VALUE); // Now trasmit
+  Serial.println("SEND RS485\n");
+  UartToRS485.begin(9600, SWSERIAL_8N2);
+
+  rs485_buffer[0] = adress; // addr
+  rs485_buffer[1] = 0x03;   // cmd
+  rs485_buffer[2] = 0x03;   // reg_addr
+  rs485_buffer[3] = 0x00;
+  rs485_buffer[4] = 0x00; // size
+  rs485_buffer[5] = 0x05; // size
+
+  uint16_t crc16 = modbus_crc((uint8_t *)rs485_buffer, 6);
+
+  rs485_buffer[6] = (uint8_t)crc16;
+  rs485_buffer[7] = (uint8_t)(crc16 >> 8);
+  Serial.print("\ncrc16:");
+  Serial.println(crc16);
+
+  int i = 0;
+  while (i <= 7)
+  {
+    Serial.print("|");
+    Serial.print(rs485_buffer[i], HEX);
+    Serial.print("|");
+
+    // Serial.println();
+    i++;
+  }
+
+  UartToRS485.write(rs485_buffer[0]); // Send message
+  UartToRS485.write(rs485_buffer[1]);
+  UartToRS485.write(rs485_buffer[2]);
+  UartToRS485.write(rs485_buffer[3]);
+  UartToRS485.write(rs485_buffer[4]);
+  UartToRS485.write(rs485_buffer[5]);
+  UartToRS485.write(rs485_buffer[6]);
+  UartToRS485.write(rs485_buffer[7]);
+}
+
 void listeningАnswer()
 {
   digitalWrite(SERIAL_COMMUNICATION_CONTROL_PIN, RS485_RX_PIN_VALUE); // Disable RS485 Transmit
-  delay(100);
-
+  Serial.println("\nListening RS485");
+  delay(500);
 
   if (UartToRS485.available() > 0)
   {
-    UartToRS485.read(readBuffer,15);
+    UartToRS485.read(readBuffer, 15);
   }
-  int i=0;
-  while (i<=14)
+  int i = 0;
+  while (i <= 14)
   {
     Serial.print(readBuffer[i], HEX);
-    //Serial.println();
+    // Serial.println();
     i++;
   }
-  
-
-
 
   delay(5000);
 }

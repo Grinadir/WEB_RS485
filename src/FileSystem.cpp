@@ -8,7 +8,7 @@ void initFileSystem()
 
 
 
-void writejson(String request, String answer) {
+void writeJson(byte adress, String answer) {
   DynamicJsonDocument jsonDynDoc(1024);
   File file = SPIFFS.open("/info.json", "r");
   DeserializationError error = deserializeJson(jsonDynDoc, file);
@@ -18,7 +18,7 @@ void writejson(String request, String answer) {
     return;
   }
   file.close();
-  jsonDynDoc["request_RS485"]=request;
+  jsonDynDoc["adress_RS485"]=adress;
   jsonDynDoc["answer_RS485"]=answer;
   file = SPIFFS.open("/info.json", "w");
   if (serializeJsonPretty(jsonDynDoc, file)) {
