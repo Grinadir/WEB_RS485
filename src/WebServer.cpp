@@ -43,9 +43,10 @@ void handleSaveJSON()
     Serial.print(adress);
 
     transmitRS485(adress);
-    listeningАnswer();
+    
 
-    String answer = webserver.arg("answer");
+    //String answer = webserver.arg("answer");
+    float answer=listeningАnswer();
     writeJson(adress, answer);
     webserver.send(200, "text/plain", "OK");
 }

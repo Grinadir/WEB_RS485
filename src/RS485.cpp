@@ -79,11 +79,11 @@ void transmitRS485(byte adress)
 {
   digitalWrite(SERIAL_COMMUNICATION_CONTROL_PIN, RS485_TX_PIN_VALUE); // Now trasmit
   Serial.println("SEND RS485\n");
-  UartToRS485.begin(9600, SWSERIAL_8N2);
+  UartToRS485.begin(2400, SWSERIAL_8N2);
 
   rs485_buffer[0] = adress; // addr
   rs485_buffer[1] = 0x03;   // cmd
-  rs485_buffer[2] = 0x03;   // reg_addr
+  rs485_buffer[2] = 0x10;   // reg_addr
   rs485_buffer[3] = 0x00;
   rs485_buffer[4] = 0x00; // size
   rs485_buffer[5] = 0x05; // size
@@ -116,7 +116,7 @@ void transmitRS485(byte adress)
   UartToRS485.write(rs485_buffer[7]);
 }
 
-void listeningАnswer()
+float listeningАnswer()
 {
   digitalWrite(SERIAL_COMMUNICATION_CONTROL_PIN, RS485_RX_PIN_VALUE); // Disable RS485 Transmit
   Serial.println("\nListening RS485");
@@ -130,9 +130,17 @@ void listeningАnswer()
   while (i <= 14)
   {
     Serial.print(readBuffer[i], HEX);
+    Serial.print("|");
     // Serial.println();
     i++;
   }
+
+  float pok=(readBuffer[9]<<24)+(readBuffer[10]<<16)+(readBuffer[7]<<8)+readBuffer[8];
+  float pokz=pok/1000;
+  Serial.print("\npokz=");
+  Serial.println(pokz);
+
+  return pokz;
 
   delay(5000);
 }

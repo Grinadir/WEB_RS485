@@ -4,7 +4,7 @@
 
 void intitRS485();
 void transmitRS485(byte adress);
-void listeningАnswer();
+float listeningАnswer();
 
 
 #endif //FILESYSTEM_H_H
